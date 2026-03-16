@@ -106,6 +106,8 @@ body {
 .widget[data-size="4x2"] .w-value { font-size: 18cqi; }
 .widget[data-size="4x2"] .w-title { font-size: 12cqi; }
 .widget[data-size="4x2"] .w-icon { font-size: 12cqi; }
+/* 4x2 列表最多显示 3 项 */
+.widget[data-size="4x2"] .w-list-item:nth-child(n+5) { display: none; }
 
 /* Large: 2 cols, tall */
 .widget[data-size="4x4"] {
