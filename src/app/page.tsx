@@ -19,17 +19,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (gridRef.current && groups.length > 0) {
-      setTimeout(() => {
-        gridRef.current?.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      }, 100);
-    }
-  }, [groups]);
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!input.trim() || loading) return;
@@ -46,8 +35,8 @@ export default function Home() {
       const data = await res.json();
       if (data.widgets) {
         setGroups((prev) => [
-          { id: Date.now().toString(), prompt, widgets: data.widgets },
           ...prev,
+          { id: Date.now().toString(), prompt, widgets: data.widgets },
         ]);
       }
     } catch (err) {
@@ -64,7 +53,7 @@ export default function Home() {
   }
 
   return (
-    <div className="page" ref={gridRef}>
+    <div className="page">
       {/* Empty state */}
       {groups.length === 0 && !loading && (
         <div className="empty-state">
@@ -76,32 +65,10 @@ export default function Home() {
         </div>
       )}
 
-      {/* Widget grid */}
-      <div className="widget-grid">
-        {/* Loading placeholders */}
-        {loading && (
-          <>
-            <div className="widget widget-loading" data-size="2x2" />
-            <div className="widget widget-loading" data-size="2x2" />
-            <div className="widget widget-loading" data-size="4x2" />
-            <div className="widget widget-loading" data-size="2x1" />
-            <div className="widget widget-loading" data-size="2x1" />
-          </>
-        )}
-
-        {/* Widget groups (newest first) */}
+      {/* Widget grid — full width, horizontal flow */}
+      <div className="widget-grid" ref={gridRef}>
         {groups.map((group, gi) => (
           <div key={group.id} style={{ display: "contents" }}>
-            {gi > 0 && (
-              <div className="scene-sep">
-                <span className="scene-sep-text">{group.prompt}</span>
-              </div>
-            )}
-            {gi === 0 && group.prompt && (
-              <div className="scene-sep" style={{ paddingTop: 0 }}>
-                <span className="scene-sep-text">{group.prompt}</span>
-              </div>
-            )}
             {group.widgets.map((w, wi) => (
               <div
                 key={wi}
@@ -113,6 +80,17 @@ export default function Home() {
             ))}
           </div>
         ))}
+
+        {/* Loading placeholders */}
+        {loading && (
+          <>
+            <div className="widget widget-loading" data-size="2x2" />
+            <div className="widget widget-loading" data-size="2x2" />
+            <div className="widget widget-loading" data-size="4x2" />
+            <div className="widget widget-loading" data-size="2x2" />
+            <div className="widget widget-loading" data-size="2x2" />
+          </>
+        )}
       </div>
 
       {/* Floating input bar */}
