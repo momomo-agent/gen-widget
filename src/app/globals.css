@@ -1,25 +1,17 @@
 @import "tailwindcss";
 
 /* ══════════════════════════════════════════════════════════
- * Gen Widget — iOS Widget Design System v2
+ * Gen Widget — iOS Widget Design System v3
  * ══════════════════════════════════════════════════════════
- * 
- * iOS Widget 实际尺寸参考 (iPhone 15 Pro @3x):
- *   Small:  170 × 170 pt  →  在网页上用 176px
- *   Medium: 364 × 170 pt  →  在网页上用 364px  
- *   Large:  364 × 382 pt  →  在网页上用 364px
  *
- * 但网页不是手机，需要更大的视觉尺寸。
- * 我们用 2 列固定布局，每列 ~180px，gap 12px
- * Medium/Large 横跨 2 列 = 372px
+ * 严格 2 列 grid，所有 widget 必须填满 grid cell。
+ * widget 不设 width，由 grid 列宽决定。
  * ══════════════════════════════════════════════════════════ */
 
 :root {
   --grid-gap: 12px;
-  --col: 240px;
-  --col-span2: calc(var(--col) * 2 + var(--grid-gap));
-  --radius-sm: 22px;
-  --radius-lg: 26px;
+  --col: 180px;
+  --radius: 22px;
 
   /* iOS system colors */
   --ios-blue: #007AFF;
@@ -59,20 +51,22 @@ body {
 .widget-grid {
   display: grid;
   grid-template-columns: var(--col) var(--col);
+  grid-auto-rows: auto;
   gap: var(--grid-gap);
-  width: var(--col-span2);
+  max-width: calc(var(--col) * 2 + var(--grid-gap));
 }
 
 /* ══════════════════════════════════════════════════════════
  * Widget Base — iOS frosted glass
  * ══════════════════════════════════════════════════════════ */
 .widget {
-  border-radius: var(--radius-sm);
-  padding: 16px 18px;
+  border-radius: var(--radius);
+  padding: 14px 16px;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-width: 0;  /* prevent grid blowout */
 
   /* iOS frosted glass */
   background: rgba(255, 255, 255, 0.72);
@@ -84,58 +78,49 @@ body {
     0 6px 16px rgba(0, 0, 0, 0.04);
 }
 
-/* ── Widget Sizes (strict iOS proportions) ── */
-
-/* Small: 1×1 grid cell, square */
+/* ── Widget Sizes ── */
+/* 2x2: 1 column, square */
 .widget[data-size="2x2"] {
-  width: var(--col);
   height: var(--col);
 }
 
-/* Medium: spans 2 columns, same height as small */
+/* 4x2: spans 2 columns, same height as 2x2 */
 .widget[data-size="4x2"] {
-  width: var(--col-span2);
   height: var(--col);
   grid-column: span 2;
-  border-radius: var(--radius-lg);
 }
 
-/* Large: spans 2 columns, double height + gap */
+/* 4x4: spans 2 columns, double height + gap */
 .widget[data-size="4x4"] {
-  width: var(--col-span2);
   height: calc(var(--col) * 2 + var(--grid-gap));
   grid-column: span 2;
-  border-radius: var(--radius-lg);
 }
 
-/* Inline: half height of small */
+/* 2x1: 1 column, half height */
 .widget[data-size="2x1"] {
-  width: var(--col);
   height: calc(var(--col) * 0.47);
-  padding: 12px 16px;
+  padding: 10px 14px;
 }
 
-/* Banner: full width, half height */
+/* 4x1: spans 2 columns, half height */
 .widget[data-size="4x1"] {
-  width: var(--col-span2);
   height: calc(var(--col) * 0.47);
   grid-column: span 2;
-  border-radius: var(--radius-lg);
-  padding: 12px 16px;
+  padding: 10px 14px;
 }
 
 /* ══════════════════════════════════════════════════════════
- * iOS Typography — SF Pro sizing
+ * iOS Typography
  * ══════════════════════════════════════════════════════════ */
 
 .w-icon {
-  font-size: 32px;
+  font-size: 28px;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .w-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--ios-tertiary);
   text-transform: uppercase;
@@ -144,7 +129,7 @@ body {
 }
 
 .w-title {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--ios-label);
   line-height: 1.25;
@@ -153,7 +138,7 @@ body {
 }
 
 .w-value {
-  font-size: 42px;
+  font-size: 34px;
   font-weight: 200;
   color: var(--ios-label);
   letter-spacing: -1.5px;
@@ -161,21 +146,21 @@ body {
 }
 
 .w-unit {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 400;
   color: var(--ios-secondary);
   letter-spacing: -0.3px;
 }
 
 .w-body {
-  font-size: 15px;
+  font-size: 13px;
   color: var(--ios-secondary);
   line-height: 1.45;
   letter-spacing: -0.15px;
 }
 
 .w-meta {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ios-tertiary);
   margin-top: auto;
   padding-top: 4px;
@@ -186,7 +171,7 @@ body {
 .w-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .w-col {
@@ -207,9 +192,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  height: 32px;
+  height: 30px;
   padding: 0 14px;
-  border-radius: 16px;
+  border-radius: 15px;
   background: var(--ios-blue);
   color: white;
   font-size: 14px;
@@ -217,7 +202,7 @@ body {
   letter-spacing: -0.15px;
   border: none;
   cursor: pointer;
-  margin-top: 6px;
+  margin-top: auto;
   width: fit-content;
 }
 
@@ -232,16 +217,16 @@ body {
  * Progress Bar
  * ══════════════════════════════════════════════════════════ */
 .w-progress {
-  height: 5px;
+  height: 4px;
   background: var(--ios-fill);
-  border-radius: 2.5px;
+  border-radius: 2px;
   margin-top: 8px;
   overflow: hidden;
 }
 
 .w-progress-fill {
   height: 100%;
-  border-radius: 2.5px;
+  border-radius: 2px;
   background: var(--ios-blue);
 }
 
@@ -256,9 +241,9 @@ body {
 .w-list-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  font-size: 14px;
+  gap: 6px;
+  padding: 3px 0;
+  font-size: 13px;
   color: var(--ios-secondary);
 }
 
@@ -271,10 +256,10 @@ body {
 }
 
 .w-list-time {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--ios-label);
-  min-width: 38px;
+  min-width: 36px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -307,24 +292,6 @@ body {
   font-weight: 700;
 }
 
-/* ── Checkbox ── */
-.w-check {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 3px 0;
-  font-size: 13px;
-  color: var(--ios-label);
-}
-
-.w-checkbox {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  border: 2px solid var(--ios-quaternary);
-  flex-shrink: 0;
-}
-
 .w-divider {
   height: 0.5px;
   background: var(--ios-quaternary);
@@ -339,7 +306,7 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: var(--col-span2);
+  width: calc(var(--col) * 2 + var(--grid-gap));
   padding: 12px 0 max(env(safe-area-inset-bottom, 20px), 20px);
   z-index: 100;
   display: flex;
@@ -490,4 +457,17 @@ body {
   font-weight: 500;
   color: rgba(0,0,0,0.22);
   white-space: nowrap;
+}
+
+/* ── Responsive: wider screens get bigger widgets ── */
+@media (min-width: 768px) {
+  :root {
+    --col: 200px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --col: 240px;
+  }
 }
