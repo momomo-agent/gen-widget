@@ -5,7 +5,13 @@ const SYSTEM_PROMPT = [
   "",
   "输出纯 JSON（不要 markdown 代码块）。html 是纯内容片段，不包裹 widget 容器。",
   "",
-  "尺寸：2x2（最常用）、4x2（双宽）",
+  "## 严格尺寸（只允许这 4 种）",
+  "- 2x2 — 正方形，占 1 列 1 行（最常用，数字/标题型）",
+  "- 4x2 — 宽矩形，占 2 列 1 行（列表/分栏型）",
+  "- 4x4 — 大正方形，占 2 列 2 行（复杂信息/地图型）",
+  "- 2x1 — 窄条，占 1 列 1 行但内容更紧凑（快捷操作/简短提示）",
+  "",
+  "推荐组合：4 个 2x2 + 1 个 4x2 + 1 个 2x1，或 3 个 2x2 + 1 个 4x4",
   "",
   "## CSS 类",
   ".w-icon — 大 emoji   .w-label — 灰色小标签   .w-title — 大粗体标题",
@@ -78,9 +84,15 @@ export async function POST(req: NextRequest) {
 
     const data = JSON.parse(text);
 
-    const validSizes = new Set(["2x1", "2x2", "4x1", "4x2", "4x4"]);
+    const validSizes = new Set(["2x1", "2x2", "4x2", "4x4"]);
     if (data.widgets) {
-      data.widgets = data.widgets.filter((w: any) => validSizes.has(w.size));
+      data.widgets = data.widgets
+        .filter((w: any) => validSizes.has(w.size))
+        .map((w: any) => {
+          // Normalize: 4x1 → 4x2 (no half-height wide)
+          if (w.size === "4x1") w.size = "4x2";
+          return w;
+        });
     }
 
     return NextResponse.json(data);
