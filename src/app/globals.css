@@ -117,13 +117,13 @@ body {
  * ══════════════════════════════════════════════════════════ */
 
 .w-icon {
-  font-size: clamp(24px, 2.5vw, 36px);
+  font-size: clamp(28px, 3vw, 42px);
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .w-label {
-  font-size: clamp(9px, 0.9vw, 12px);
+  font-size: clamp(10px, 1vw, 13px);
   font-weight: 600;
   color: var(--ios-tertiary);
   text-transform: uppercase;
@@ -132,15 +132,15 @@ body {
 }
 
 .w-title {
-  font-size: clamp(15px, 1.6vw, 24px);
+  font-size: clamp(20px, 2.2vw, 30px);
   font-weight: 700;
   color: var(--ios-label);
-  line-height: 1.15;
+  line-height: 1.1;
   letter-spacing: -0.5px;
 }
 
 .w-value {
-  font-size: clamp(28px, 3vw, 48px);
+  font-size: clamp(36px, 4vw, 56px);
   font-weight: 300;
   color: var(--ios-label);
   letter-spacing: -1.5px;
@@ -148,19 +148,19 @@ body {
 }
 
 .w-unit {
-  font-size: clamp(14px, 1.4vw, 22px);
+  font-size: clamp(18px, 2vw, 28px);
   font-weight: 400;
   color: var(--ios-secondary);
 }
 
 .w-body {
-  font-size: clamp(11px, 1.1vw, 16px);
+  font-size: clamp(13px, 1.3vw, 18px);
   color: var(--ios-secondary);
   line-height: 1.35;
 }
 
 .w-meta {
-  font-size: clamp(9px, 0.85vw, 12px);
+  font-size: clamp(10px, 1vw, 13px);
   color: var(--ios-tertiary);
   margin-top: auto;
 }
@@ -190,12 +190,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  height: clamp(28px, 2.5vw, 38px);
-  padding: 0 clamp(10px, 1.2vw, 18px);
+  height: clamp(32px, 3vw, 42px);
+  padding: 0 clamp(14px, 1.5vw, 22px);
   border-radius: 99px;
   background: var(--ios-blue);
   color: white;
-  font-size: clamp(12px, 1.2vw, 17px);
+  font-size: clamp(14px, 1.4vw, 18px);
   font-weight: 600;
   border: none;
   cursor: pointer;
