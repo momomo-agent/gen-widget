@@ -1,47 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const SYSTEM_PROMPT = [
-  "你是 iOS Widget 生成引擎。用户描述场景，你输出 4-6 个 iOS 风格小组件。",
+  "你是 iOS Widget 生成引擎。用户描述场景，你输出 5-6 个 iOS 风格小组件。",
   "",
-  "输出纯 JSON（不要 markdown 代码块）。html 是纯内容片段，不包裹 widget 容器。",
+  "输出纯 JSON。html 是纯内容片段，不包裹 widget 容器。",
   "",
-  "## 严格尺寸（只允许这 4 种）",
-  "- 2x2 — 正方形，占 1 列 1 行（最常用，数字/标题型）",
-  "- 4x2 — 宽矩形，占 2 列 1 行（列表/分栏型）",
-  "- 4x4 — 大正方形，占 2 列 2 行（复杂信息/地图型）",
-  "- 2x1 — 窄条，占 1 列 1 行但内容更紧凑（快捷操作/简短提示）",
-  "",
-  "推荐组合：4 个 2x2 + 1 个 4x2 + 1 个 2x1，或 3 个 2x2 + 1 个 4x4",
+  "## 尺寸（严格只用这 4 种）",
+  "2x2 — 正方形（最常用）  4x2 — 宽（列表/分栏）  4x4 — 大（复杂信息）  2x1 — 窄条",
   "",
   "## CSS 类",
-  ".w-icon — 大 emoji   .w-label — 灰色小标签   .w-title — 大粗体标题",
-  ".w-value — 超大数字（widget 视觉中心）  .w-unit — 单位",
-  ".w-body — 正文   .w-meta — 底部灰字（自动推底）",
-  ".w-row — 横排   .w-col — 竖排   .w-action — 蓝色按钮   .w-action-green — 绿色按钮",
-  ".w-progress > .w-progress-fill — 进度条   .w-badge — 红色角标",
-  ".w-list-item > .w-list-dot — 列表项   .w-list-time — 时间",
+  "字号已按 cqi（相对 widget 宽度）设好，你只管用类名：",
+  ".w-icon — 大 emoji  .w-label — 极小灰色标签  .w-title — 巨大粗体标题",
+  ".w-value — 超大数字  .w-unit — 跟在 value 后  .w-body — 小正文  .w-meta — 底部极小灰字",
+  ".w-row — 横排  .w-col — 竖排  .w-action — 全宽大按钮（蓝色）",
+  ".w-action-green — 绿色按钮  .w-action-orange — 橙色按钮",
+  ".w-progress > .w-progress-fill — 进度条  .w-badge — 红色角标",
+  ".w-list-item > .w-list-time + text — 带时间的列表项",
   "",
-  "## 示例（学习这些结构）",
+  "## 🎨 色彩变化（让每组 widget 不单调）",
+  "在 widget 容器上加 class（通过 wrapperClass 字段）：",
+  "w-bg-blue — 蓝色渐变底（适合天气/出行）",
+  "w-bg-green — 绿色渐变底（适合健康/运动）",
+  "w-bg-dark — 深色毛玻璃底（适合股票/数据/阅读）",
+  "w-bg-orange — 橙粉渐变底（适合促销/倒计时）",
+  "不加 = 默认白色毛玻璃。每组建议 1-2 个有色 widget。",
   "",
+  "## 示例",
   '{"widgets":[',
-  // 天气 — 标准数字型
-  '{"size":"2x2","html":"<div class=\'w-icon\'>☀️</div><div class=\'w-label\'>北京 · 多云</div><div class=\'w-value\'>18<span class=\'w-unit\'>°C</span></div><div class=\'w-meta\'>体感 16°C · 空气优良</div>"},',
-  // 通勤 — 标题 + 数字 + 动作
-  '{"size":"2x2","html":"<div class=\'w-icon\'>🚇</div><div class=\'w-label\'>通勤</div><div class=\'w-value\'>25<span class=\'w-unit\'>分钟</span></div><div class=\'w-meta\'>地铁2号线 · 预计 8:40 到达</div>"},',
-  // 日程 — 4x2 列表型（必须有大标题）
-  '{"size":"4x2","html":"<div class=\'w-row\'><div class=\'w-icon\'>📋</div><div class=\'w-col\'><div class=\'w-title\'>今日日程</div><div class=\'w-label\'>3 个会议</div></div></div><div class=\'w-list-item\'><div class=\'w-list-time\'>09:30</div>产品周会 · 3楼会议室</div><div class=\'w-list-item\'><div class=\'w-list-time\'>14:00</div>项目评审 · 线上</div><div class=\'w-list-item\'><div class=\'w-list-time\'>16:30</div>1v1 沟通</div>"},',
-  // 操作型 — 大标题 + 按钮
-  '{"size":"2x2","html":"<div class=\'w-icon\'>☕</div><div class=\'w-title\'>瑞幸咖啡</div><div class=\'w-body\'>美式 · 常喝</div><div class=\'w-action-green\'>下单 ¥9.9</div>"},',
-  // 数据型 — 步数/金额
-  '{"size":"2x2","html":"<div class=\'w-icon\'>💰</div><div class=\'w-label\'>本月支出</div><div class=\'w-value\'>¥4,267</div><div class=\'w-progress\'><div class=\'w-progress-fill\' style=\'width:65%\'></div></div><div class=\'w-meta\'>预算剩余 ¥1,733</div>"}',
+  '{"size":"2x2","wrapperClass":"w-bg-blue","html":"<div class=\'w-icon\'>☀️</div><div class=\'w-label\'>北京 · 晴</div><div class=\'w-value\'>18<span class=\'w-unit\'>°</span></div><div class=\'w-meta\'>体感 16° · 空气优</div>"},',
+  '{"size":"2x2","html":"<div class=\'w-icon\'>🚇</div><div class=\'w-label\'>通勤</div><div class=\'w-value\'>25<span class=\'w-unit\'>分钟</span></div><div class=\'w-meta\'>2号线 · 8:40 到</div>"},',
+  '{"size":"4x2","html":"<div class=\'w-row\'><div class=\'w-icon\'>📋</div><div class=\'w-col\'><div class=\'w-title\'>今日日程</div><div class=\'w-label\'>3 个会议</div></div></div><div class=\'w-list-item\'><div class=\'w-list-time\'>09:30</div>产品周会</div><div class=\'w-list-item\'><div class=\'w-list-time\'>14:00</div>项目评审</div>"},',
+  '{"size":"2x2","html":"<div class=\'w-icon\'>☕</div><div class=\'w-title\'>订咖啡</div><div class=\'w-body\'>美式 · 常喝</div><div class=\'w-action-green\'>下单 ¥9.9</div>"},',
+  '{"size":"2x2","wrapperClass":"w-bg-dark","html":"<div class=\'w-icon\'>📊</div><div class=\'w-label\'>本月支出</div><div class=\'w-value\'>¥4,267</div><div class=\'w-progress\'><div class=\'w-progress-fill\' style=\'width:65%\'></div></div><div class=\'w-meta\'>预算剩余 ¥1,733</div>"}',
   ']}',
   "",
-  "## 规则",
-  "1. **每个 2x2 必须有 w-value（大数字）或 w-title（大标题）**——这是视觉焦点",
-  "2. 4x2 必须有 w-title 大标题 + 列表或分栏内容",
-  "3. 内容具体真实（具体温度/时间/地点/金额/百分比）",
-  "4. 操作按钮放在信息 widget 底部",
-  "5. 用 emoji 做图标",
+  "## ⚠️ 设计铁律",
+  "1. 每个 2x2 必须有 w-value（大数字）或 w-title（大标题）作为视觉焦点",
+  "2. 按钮用 w-action（全宽大胶囊），不要小按钮",
+  "3. 内容少而精 — 2x2 最多 4 个元素（icon + label + value/title + meta）",
+  "4. 内容具体（具体温度/时间/地点/金额）",
+  "5. 每组 5-6 个 widget，1-2 个用彩色底",
+  "6. 用 emoji 做图标",
 ].join("\n");
 
 export const maxDuration = 30;
@@ -70,14 +69,10 @@ export async function POST(req: NextRequest) {
     );
 
     const raw = await res.text();
-    if (!res.ok) {
-      throw new Error("API error: " + res.status);
-    }
+    if (!res.ok) throw new Error("API " + res.status);
 
     const json = JSON.parse(raw);
-    if (!json.content?.[0]?.text) {
-      throw new Error("No content");
-    }
+    if (!json.content?.[0]?.text) throw new Error("No content");
 
     let text = json.content[0].text.trim();
     text = text.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
@@ -86,13 +81,7 @@ export async function POST(req: NextRequest) {
 
     const validSizes = new Set(["2x1", "2x2", "4x2", "4x4"]);
     if (data.widgets) {
-      data.widgets = data.widgets
-        .filter((w: any) => validSizes.has(w.size))
-        .map((w: any) => {
-          // Normalize: 4x1 → 4x2 (no half-height wide)
-          if (w.size === "4x1") w.size = "4x2";
-          return w;
-        });
+      data.widgets = data.widgets.filter((w: any) => validSizes.has(w.size));
     }
 
     return NextResponse.json(data);

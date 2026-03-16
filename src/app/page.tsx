@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 
 interface Widget {
-  size: "2x1" | "2x2" | "4x1" | "4x2" | "4x4";
+  size: "2x1" | "2x2" | "4x2" | "4x4";
   html: string;
+  wrapperClass?: string;
 }
 
 export default function Home() {
@@ -80,7 +81,7 @@ export default function Home() {
           {widgets.map((w, i) => (
             <div
               key={i}
-              className="widget widget-enter"
+              className={`widget widget-enter ${w.wrapperClass || ""}`}
               data-size={w.size}
               style={{ animationDelay: `${(i % 6) * 60}ms` }}
               dangerouslySetInnerHTML={{ __html: w.html }}
