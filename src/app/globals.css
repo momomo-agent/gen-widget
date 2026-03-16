@@ -1,0 +1,528 @@
+@import "tailwindcss";
+
+:root {
+  --grid-gap: 12px;
+  --widget-radius: 24px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
+  background: #f2f2f7;
+  -webkit-font-smoothing: antialiased;
+  color: #1c1c1e;
+}
+
+/* ══════════════════════════════════
+   Main layout
+   ══════════════════════════════════ */
+.main-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 20px 120px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.1) transparent;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════
+   Widget grid — responsive masonry-like
+   ══════════════════════════════════ */
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--grid-gap);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* On wider screens, use 4 columns */
+@media (min-width: 768px) {
+  .widget-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .widget-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* ══════════════════════════════════
+   Scene divider
+   ══════════════════════════════════ */
+.scene-divider {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 8px;
+}
+
+.scene-divider:first-child {
+  padding-top: 8px;
+}
+
+.scene-divider::before,
+.scene-divider::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: rgba(0,0,0,0.08);
+}
+
+.scene-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.35);
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+/* ══════════════════════════════════
+   Widget card — iOS style
+   ══════════════════════════════════ */
+.widget {
+  border-radius: var(--widget-radius);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  /* iOS frosted glass */
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+
+  /* Subtle shadow like iOS widgets */
+  box-shadow:
+    0 0.5px 0 rgba(255,255,255,0.9) inset,
+    0 1px 3px rgba(0,0,0,0.04),
+    0 6px 24px rgba(0,0,0,0.06);
+
+  /* No visible border — iOS widgets don't have one */
+  border: none;
+
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.widget:hover {
+  transform: scale(1.01);
+}
+
+/* ── Widget sizes ── */
+.widget[data-size="2x1"] {
+  grid-column: span 2;
+  min-height: 80px;
+}
+
+.widget[data-size="2x2"] {
+  grid-column: span 2;
+  grid-row: span 2;
+  min-height: 170px;
+}
+
+.widget[data-size="4x1"] {
+  grid-column: span 4;
+  min-height: 80px;
+}
+
+.widget[data-size="4x2"] {
+  grid-column: span 4;
+  min-height: 170px;
+}
+
+.widget[data-size="4x4"] {
+  grid-column: span 4;
+  grid-row: span 2;
+  min-height: 340px;
+}
+
+/* On mobile, cap at full width */
+@media (max-width: 767px) {
+  .widget[data-size="4x1"],
+  .widget[data-size="4x2"],
+  .widget[data-size="4x4"] {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ══════════════════════════════════
+   Widget typography — iOS style
+   ══════════════════════════════════ */
+.widget .w-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.widget .w-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.widget .w-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1c1c1e;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+.widget .w-value {
+  font-size: 42px;
+  font-weight: 200;
+  color: #1c1c1e;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+.widget .w-unit {
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(0,0,0,0.4);
+  letter-spacing: -0.5px;
+}
+
+.widget .w-body {
+  font-size: 14px;
+  color: rgba(0,0,0,0.55);
+  line-height: 1.55;
+}
+
+.widget .w-meta {
+  font-size: 11px;
+  color: rgba(0,0,0,0.3);
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ── Accent colors ── */
+.widget .w-accent-blue { color: #007AFF; }
+.widget .w-accent-green { color: #34C759; }
+.widget .w-accent-orange { color: #FF9500; }
+.widget .w-accent-red { color: #FF3B30; }
+.widget .w-accent-purple { color: #AF52DE; }
+.widget .w-accent-teal { color: #5AC8FA; }
+
+/* ── Action button ── */
+.widget .w-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 100px;
+  background: #007AFF;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  width: fit-content;
+  transition: opacity 0.15s;
+  letter-spacing: -0.2px;
+}
+
+.widget .w-action:hover { opacity: 0.85; }
+
+.widget .w-action-green {
+  background: #34C759;
+  color: #fff;
+}
+
+.widget .w-action-orange {
+  background: #FF9500;
+  color: #fff;
+}
+
+.widget .w-action-secondary {
+  background: rgba(0,0,0,0.05);
+  color: #007AFF;
+}
+
+/* ── Progress bar ── */
+.widget .w-progress {
+  height: 6px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.widget .w-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #007AFF;
+  transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.widget .w-progress-fill-green { background: #34C759; }
+.widget .w-progress-fill-orange { background: #FF9500; }
+.widget .w-progress-fill-red { background: #FF3B30; }
+
+/* ── List items ── */
+.widget .w-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 14px;
+  color: rgba(0,0,0,0.7);
+}
+
+.widget .w-list-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #007AFF;
+  flex-shrink: 0;
+}
+
+.widget .w-list-dot-green { background: #34C759; }
+.widget .w-list-dot-orange { background: #FF9500; }
+.widget .w-list-dot-red { background: #FF3B30; }
+.widget .w-list-dot-purple { background: #AF52DE; }
+
+/* ── Tag/badge ── */
+.widget .w-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.05);
+  font-size: 12px;
+  color: rgba(0,0,0,0.55);
+  font-weight: 500;
+}
+
+.widget .w-tag-blue { background: rgba(0,122,255,0.1); color: #007AFF; }
+.widget .w-tag-green { background: rgba(52,199,89,0.1); color: #34C759; }
+.widget .w-tag-orange { background: rgba(255,149,0,0.1); color: #FF9500; }
+.widget .w-tag-red { background: rgba(255,59,48,0.1); color: #FF3B30; }
+
+/* ── Checkbox items ── */
+.widget .w-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.widget .w-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid rgba(0,0,0,0.15);
+  flex-shrink: 0;
+}
+
+.widget .w-checkbox-done {
+  background: #34C759;
+  border-color: #34C759;
+  position: relative;
+}
+
+/* ── Stat row (horizontal data) ── */
+.widget .w-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.widget .w-stat {
+  flex: 1;
+}
+
+.widget .w-stat-label {
+  font-size: 11px;
+  color: rgba(0,0,0,0.35);
+  margin-bottom: 2px;
+}
+
+.widget .w-stat-value {
+  font-size: 22px;
+  font-weight: 300;
+  color: #1c1c1e;
+  letter-spacing: -0.5px;
+}
+
+/* ══════════════════════════════════
+   Input bar — floating bottom
+   ══════════════════════════════════ */
+.input-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 20px 24px;
+  background: rgba(242, 242, 247, 0.85);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border-top: 0.5px solid rgba(0,0,0,0.06);
+  z-index: 100;
+}
+
+.input-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.input-field {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  border-radius: 22px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.95);
+  padding: 12px 18px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  color: #1c1c1e;
+  resize: none;
+  line-height: 1.4;
+  overflow-y: auto;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input-field::placeholder {
+  color: rgba(0,0,0,0.3);
+}
+
+.input-field:focus {
+  border-color: rgba(0,122,255,0.4);
+  box-shadow: 0 0 0 4px rgba(0,122,255,0.06);
+}
+
+.input-submit {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #007AFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.input-submit:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.input-submit:not(:disabled):hover {
+  transform: scale(1.06);
+}
+
+.input-submit:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+.input-submit svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+/* ══════════════════════════════════
+   Empty state
+   ══════════════════════════════════ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  gap: 8px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.empty-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1c1c1e;
+  letter-spacing: -0.5px;
+}
+
+.empty-desc {
+  font-size: 15px;
+  color: rgba(0,0,0,0.35);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════
+   Animations
+   ══════════════════════════════════ */
+@keyframes widget-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.widget-enter {
+  animation: widget-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -300% 0; }
+  100% { background-position: 300% 0; }
+}
+
+.widget-loading {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.6) 25%,
+    rgba(255,255,255,0.3) 50%,
+    rgba(255,255,255,0.6) 75%
+  ) !important;
+  background-size: 300% 100% !important;
+  animation: shimmer 2s ease-in-out infinite;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 6px 24px rgba(0,0,0,0.03) !important;
+}
