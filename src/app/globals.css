@@ -70,7 +70,7 @@ body {
  * ══════════════════════════════════════════════════════════ */
 .widget {
   border-radius: var(--radius);
-  padding: 14px;
+  padding: 16px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -101,6 +101,11 @@ body {
   grid-column: span 2;
   aspect-ratio: 364 / 170;
 }
+
+/* 4x2 内 w-value 不需要那么大 */
+.widget[data-size="4x2"] .w-value { font-size: 18cqi; }
+.widget[data-size="4x2"] .w-title { font-size: 12cqi; }
+.widget[data-size="4x2"] .w-icon { font-size: 12cqi; }
 
 /* Large: 2 cols, tall */
 .widget[data-size="4x4"] {
@@ -173,8 +178,8 @@ body {
 }
 
 .w-meta {
-  font-size: 5.5cqi;
-  color: var(--ios-tertiary);
+  font-size: 6.5cqi;
+  color: var(--ios-secondary);
   margin-top: auto;
   white-space: nowrap;
   overflow: hidden;
@@ -272,7 +277,7 @@ body {
   background: rgba(30, 30, 30, 0.85) !important;
   backdrop-filter: blur(40px) saturate(1.8) !important;
 }
-.w-bg-dark .w-label, .w-bg-dark .w-meta { color: rgba(255,255,255,0.4); }
+.w-bg-dark .w-label, .w-bg-dark .w-meta { color: rgba(255,255,255,0.55); }
 .w-bg-dark .w-title, .w-bg-dark .w-value { color: rgba(255,255,255,0.95); }
 .w-bg-dark .w-body { color: rgba(255,255,255,0.6); }
 .w-bg-dark .w-unit { color: rgba(255,255,255,0.5); }
