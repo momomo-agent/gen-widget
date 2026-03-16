@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 
 interface Widget {
   size: "2x1" | "2x2" | "4x2" | "4x4";
@@ -12,26 +12,6 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [widgets, setWidgets] = useState<Widget[]>([]);
   const [loading, setLoading] = useState(false);
-
-  // Calculate grid dimensions to fill viewport
-  const updateGrid = useCallback(() => {
-    const pad = 16; // page padding
-    const inputH = 80; // input bar height
-    const gap = 10;
-    const w = window.innerWidth - pad * 2;
-    const h = window.innerHeight - pad - inputH;
-    // Target cell ~160-200px, adjust to fill viewport exactly
-    const cols = Math.max(2, Math.round(w / 180));
-    const rows = Math.max(2, Math.round(h / 180));
-    document.documentElement.style.setProperty("--cols", String(cols));
-    document.documentElement.style.setProperty("--rows", String(rows));
-  }, []);
-
-  useEffect(() => {
-    updateGrid();
-    window.addEventListener("resize", updateGrid);
-    return () => window.removeEventListener("resize", updateGrid);
-  }, [updateGrid]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,7 +28,6 @@ export default function Home() {
       });
       const data = await res.json();
       if (data.widgets) {
-        // Append new widgets — grid fills viewport, extras wrap
         setWidgets((prev) => [...prev, ...data.widgets]);
       }
     } catch (err) {
@@ -71,7 +50,7 @@ export default function Home() {
           <div className="empty-icon">✨</div>
           <div className="empty-title">Gen Widget</div>
           <div className="empty-subtitle">
-            描述一个场景，AI 生成 iOS 风格的智能小部件
+            描述一个场景，生成 iOS 风格小组件
           </div>
         </div>
       )}
