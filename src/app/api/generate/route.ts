@@ -35,12 +35,14 @@ const SYSTEM_PROMPT = [
   ']}',
   "",
   "## ⚠️ 设计铁律",
-  "1. 每个 2x2 必须有 w-value（大数字）或 w-title（大标题）作为视觉焦点",
-  "2. 按钮用 w-action（全宽大胶囊），不要小按钮",
-  "3. 内容少而精 — 2x2 最多 4 个元素（icon + label + value/title + meta）",
-  "4. 内容具体（具体温度/时间/地点/金额）",
-  "5. 每组 5-6 个 widget，1-2 个用彩色底",
-  "6. 用 emoji 做图标",
+  "1. 每个 widget 必须有 w-value（大数字）或 w-title（大标题）作为视觉焦点",
+  "2. 每个 widget 必须有具体数据（温度23°、时间08:40、金额¥15.9、百分比85%、数量3杯、距离2.5km）",
+  "3. 每个 widget 必须有 w-meta 或 w-label 底部辅助文字",
+  "4. 按钮用 w-action（全宽大胶囊），不要小按钮",
+  "5. 内容少而精 — 2x2 最多 4 个元素（icon + label + value/title + meta）",
+  "6. 每组 5-6 个 widget，1-2 个用彩色底",
+  "7. 用 emoji 做图标",
+  "8. 禁止抽象/模糊内容（❌ '学习进度' ✓ '已背 150 词'）",
 ].join("\n");
 
 export const maxDuration = 30;
