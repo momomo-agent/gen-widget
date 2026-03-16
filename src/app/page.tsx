@@ -1,23 +1,36 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface Widget {
   size: "2x1" | "2x2" | "4x1" | "4x2" | "4x4";
   html: string;
 }
 
-interface WidgetGroup {
-  id: string;
-  prompt: string;
-  widgets: Widget[];
-}
-
 export default function Home() {
   const [input, setInput] = useState("");
-  const [groups, setGroups] = useState<WidgetGroup[]>([]);
+  const [widgets, setWidgets] = useState<Widget[]>([]);
   const [loading, setLoading] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Calculate grid dimensions to fill viewport
+  const updateGrid = useCallback(() => {
+    const pad = 16; // page padding
+    const inputH = 80; // input bar height
+    const gap = 10;
+    const w = window.innerWidth - pad * 2;
+    const h = window.innerHeight - pad - inputH;
+    // Target cell ~160-200px, adjust to fill viewport exactly
+    const cols = Math.max(2, Math.round(w / 180));
+    const rows = Math.max(2, Math.round(h / 180));
+    document.documentElement.style.setProperty("--cols", String(cols));
+    document.documentElement.style.setProperty("--rows", String(rows));
+  }, []);
+
+  useEffect(() => {
+    updateGrid();
+    window.addEventListener("resize", updateGrid);
+    return () => window.removeEventListener("resize", updateGrid);
+  }, [updateGrid]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,10 +47,8 @@ export default function Home() {
       });
       const data = await res.json();
       if (data.widgets) {
-        setGroups((prev) => [
-          ...prev,
-          { id: Date.now().toString(), prompt, widgets: data.widgets },
-        ]);
+        // Append new widgets — grid fills viewport, extras wrap
+        setWidgets((prev) => [...prev, ...data.widgets]);
       }
     } catch (err) {
       console.error(err);
@@ -54,8 +65,7 @@ export default function Home() {
 
   return (
     <div className="page">
-      {/* Empty state */}
-      {groups.length === 0 && !loading && (
+      {widgets.length === 0 && !loading && (
         <div className="empty-state">
           <div className="empty-icon">✨</div>
           <div className="empty-title">Gen Widget</div>
@@ -65,35 +75,29 @@ export default function Home() {
         </div>
       )}
 
-      {/* Widget grid — full width, horizontal flow */}
-      <div className="widget-grid" ref={gridRef}>
-        {groups.map((group, gi) => (
-          <div key={group.id} style={{ display: "contents" }}>
-            {group.widgets.map((w, wi) => (
-              <div
-                key={wi}
-                className="widget widget-enter"
-                data-size={w.size}
-                style={{ animationDelay: `${wi * 60}ms` }}
-                dangerouslySetInnerHTML={{ __html: w.html }}
-              />
-            ))}
-          </div>
-        ))}
+      {(widgets.length > 0 || loading) && (
+        <div className="widget-grid">
+          {widgets.map((w, i) => (
+            <div
+              key={i}
+              className="widget widget-enter"
+              data-size={w.size}
+              style={{ animationDelay: `${(i % 6) * 60}ms` }}
+              dangerouslySetInnerHTML={{ __html: w.html }}
+            />
+          ))}
+          {loading && (
+            <>
+              <div className="widget widget-loading" data-size="2x2" />
+              <div className="widget widget-loading" data-size="2x2" />
+              <div className="widget widget-loading" data-size="4x2" />
+              <div className="widget widget-loading" data-size="2x2" />
+              <div className="widget widget-loading" data-size="2x2" />
+            </>
+          )}
+        </div>
+      )}
 
-        {/* Loading placeholders */}
-        {loading && (
-          <>
-            <div className="widget widget-loading" data-size="2x2" />
-            <div className="widget widget-loading" data-size="2x2" />
-            <div className="widget widget-loading" data-size="4x2" />
-            <div className="widget widget-loading" data-size="2x2" />
-            <div className="widget widget-loading" data-size="2x2" />
-          </>
-        )}
-      </div>
-
-      {/* Floating input bar */}
       <div className="input-bar">
         <textarea
           className="input-field"

@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 /* ══════════════════════════════════════════════════════════
- * Gen Widget — iOS Widget Design System v4
+ * Gen Widget — iOS Widget Design System v5
  * ══════════════════════════════════════════════════════════
- * 
- * 全屏网格铺满，横向追加。
- * Widget 用 CSS grid auto-fill 自适应列数。
- * 字号参照 iOS 真机：标题 22px，数据 40px，按钮 16px。
+ *
+ * 整个 viewport = 一个 grid。
+ * grid 列数 = viewport 宽度 / 单元格，行数 = viewport 高度 / 单元格。
+ * widget 字号相对单元格大小，用 cqi / clamp。
  * ══════════════════════════════════════════════════════════ */
 
 :root {
-  --cell: 170px;       /* grid 基础单元 */
-  --grid-gap: 10px;
+  --gap: 10px;
   --radius: 22px;
+  --cols: 6;  /* JS will override based on viewport */
+  --rows: 4;
 
   /* iOS system colors */
   --ios-blue: #007AFF;
@@ -30,28 +31,35 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', BlinkMacSystemFont, system-ui, sans-serif;
   background: linear-gradient(165deg, #c9dff7 0%, #d4e4f7 20%, #e0eaf5 40%, #d6dff0 60%, #c8d5eb 80%, #bfcfe6 100%);
-  background-attachment: fixed;
-  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Page Layout ── */
+/* ── Page = full viewport ── */
 .page {
-  min-height: 100vh;
-  padding: 20px;
-  padding-bottom: 100px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 16px;
+  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── Widget Grid: full-width auto-fill ── */
+/* ── Widget Grid: fills viewport ── */
 .widget-grid {
+  flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, var(--cell));
-  grid-auto-rows: var(--cell);
-  gap: var(--grid-gap);
-  justify-content: center;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  gap: var(--gap);
+  container-type: inline-size;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -59,14 +67,14 @@ body {
  * ══════════════════════════════════════════════════════════ */
 .widget {
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 14px;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
 
-  /* iOS frosted glass */
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(40px) saturate(1.8);
   -webkit-backdrop-filter: blur(40px) saturate(1.8);
@@ -77,66 +85,62 @@ body {
 }
 
 /* ── Widget Sizes ── */
-/* 2x2: 1 col, 1 row (square) */
 .widget[data-size="2x2"] {
   grid-column: span 1;
   grid-row: span 1;
 }
 
-/* 4x2: 2 cols, 1 row */
 .widget[data-size="4x2"] {
   grid-column: span 2;
   grid-row: span 1;
 }
 
-/* 4x4: 2 cols, 2 rows */
 .widget[data-size="4x4"] {
   grid-column: span 2;
   grid-row: span 2;
 }
 
-/* 2x1: 1 col, but half-height — we simulate with smaller padding */
 .widget[data-size="2x1"] {
   grid-column: span 1;
   grid-row: span 1;
-  /* same grid cell as 2x2 but visually compact */
 }
 
-/* 4x1: 2 cols, half height */
 .widget[data-size="4x1"] {
   grid-column: span 2;
   grid-row: span 1;
 }
 
 /* ══════════════════════════════════════════════════════════
- * iOS Typography — BIG like real iOS widgets
+ * Typography — relative to widget size
+ * Widget ~160-200px wide, so:
+ *   icon 28-32px, title 18-22px, value 32-42px
  * ══════════════════════════════════════════════════════════ */
 
 .w-icon {
-  font-size: 32px;
+  font-size: clamp(24px, 2.5vw, 36px);
   line-height: 1;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .w-label {
-  font-size: 12px;
+  font-size: clamp(9px, 0.9vw, 12px);
   font-weight: 600;
   color: var(--ios-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 2px;
+  letter-spacing: 0.4px;
+  margin-bottom: 1px;
 }
 
 .w-title {
-  font-size: 22px;
+  font-size: clamp(15px, 1.6vw, 24px);
   font-weight: 700;
   color: var(--ios-label);
-  line-height: 1.2;
+  line-height: 1.15;
   letter-spacing: -0.5px;
 }
 
 .w-value {
-  font-size: 42px;
+  font-size: clamp(28px, 3vw, 48px);
   font-weight: 300;
   color: var(--ios-label);
   letter-spacing: -1.5px;
@@ -144,37 +148,34 @@ body {
 }
 
 .w-unit {
-  font-size: 20px;
+  font-size: clamp(14px, 1.4vw, 22px);
   font-weight: 400;
   color: var(--ios-secondary);
-  letter-spacing: -0.3px;
 }
 
 .w-body {
-  font-size: 15px;
+  font-size: clamp(11px, 1.1vw, 16px);
   color: var(--ios-secondary);
-  line-height: 1.4;
-  letter-spacing: -0.2px;
+  line-height: 1.35;
 }
 
 .w-meta {
-  font-size: 12px;
+  font-size: clamp(9px, 0.85vw, 12px);
   color: var(--ios-tertiary);
   margin-top: auto;
-  padding-top: 4px;
 }
 
 /* ── Flex helpers ── */
 .w-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .w-col {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   flex: 1;
   min-width: 0;
 }
@@ -182,21 +183,20 @@ body {
 .w-spacer { flex: 1; }
 
 /* ══════════════════════════════════════════════════════════
- * iOS Action Button — BIG
+ * Action Button
  * ══════════════════════════════════════════════════════════ */
 .w-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 36px;
-  padding: 0 18px;
-  border-radius: 18px;
+  gap: 4px;
+  height: clamp(28px, 2.5vw, 38px);
+  padding: 0 clamp(10px, 1.2vw, 18px);
+  border-radius: 99px;
   background: var(--ios-blue);
   color: white;
-  font-size: 16px;
+  font-size: clamp(12px, 1.2vw, 17px);
   font-weight: 600;
-  letter-spacing: -0.2px;
   border: none;
   cursor: pointer;
   margin-top: auto;
@@ -211,19 +211,19 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════
- * Progress Bar
+ * Progress / List / Tags / Badges
  * ══════════════════════════════════════════════════════════ */
 .w-progress {
-  height: 5px;
+  height: 4px;
   background: var(--ios-fill);
-  border-radius: 2.5px;
-  margin-top: 8px;
+  border-radius: 2px;
+  margin-top: 6px;
   overflow: hidden;
 }
 
 .w-progress-fill {
   height: 100%;
-  border-radius: 2.5px;
+  border-radius: 2px;
   background: var(--ios-blue);
 }
 
@@ -232,45 +232,39 @@ body {
 .w-fill-red    { background: var(--ios-red); }
 .w-fill-purple { background: var(--ios-purple); }
 
-/* ══════════════════════════════════════════════════════════
- * List Items
- * ══════════════════════════════════════════════════════════ */
 .w-list-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 0;
-  font-size: 14px;
+  gap: 5px;
+  padding: 2px 0;
+  font-size: clamp(10px, 1vw, 14px);
   color: var(--ios-secondary);
 }
 
 .w-list-dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--ios-blue);
   flex-shrink: 0;
 }
 
 .w-list-time {
-  font-size: 14px;
+  font-size: clamp(10px, 1vw, 14px);
   font-weight: 500;
   color: var(--ios-label);
-  min-width: 36px;
+  min-width: 32px;
   font-variant-numeric: tabular-nums;
 }
 
-/* ══════════════════════════════════════════════════════════
- * Tags & Badges
- * ══════════════════════════════════════════════════════════ */
 .w-tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  border-radius: 6px;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 5px;
   background: var(--ios-fill);
-  font-size: 12px;
+  font-size: clamp(9px, 0.85vw, 12px);
   font-weight: 500;
   color: var(--ios-secondary);
 }
@@ -279,51 +273,51 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
   background: var(--ios-red);
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .w-divider {
   height: 0.5px;
   background: var(--ios-quaternary);
-  margin: 4px 0;
+  margin: 3px 0;
 }
 
 /* ══════════════════════════════════════════════════════════
- * Floating Input Bar — full width
+ * Input Bar — bottom fixed
  * ══════════════════════════════════════════════════════════ */
 .input-bar {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 20px max(env(safe-area-inset-bottom, 16px), 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 560px;
+  padding: 10px 20px max(env(safe-area-inset-bottom, 14px), 14px);
   z-index: 100;
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  max-width: 600px;
-  margin: 0 auto;
 }
 
 .input-field {
   flex: 1;
-  min-height: 44px;
-  max-height: 120px;
-  border-radius: 22px;
+  min-height: 42px;
+  max-height: 100px;
+  border-radius: 21px;
   border: none;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(30px) saturate(1.5);
   -webkit-backdrop-filter: blur(30px) saturate(1.5);
   box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 0.5px 0 rgba(255,255,255,0.5) inset;
-  padding: 11px 18px;
-  font-size: 16px;
+  padding: 10px 16px;
+  font-size: 15px;
   font-family: inherit;
   outline: none;
   color: var(--ios-label);
@@ -331,17 +325,14 @@ body {
   line-height: 1.4;
 }
 
-.input-field::placeholder {
-  color: var(--ios-tertiary);
-}
-
+.input-field::placeholder { color: var(--ios-tertiary); }
 .input-field:focus {
   box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 0 0 3px rgba(0,122,255,0.12), 0 0.5px 0 rgba(255,255,255,0.5) inset;
 }
 
 .input-submit {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--ios-blue);
   border: none;
@@ -354,21 +345,9 @@ body {
   transition: opacity 0.15s, transform 0.15s;
 }
 
-.input-submit:disabled {
-  opacity: 0.35;
-  cursor: default;
-  box-shadow: none;
-}
-
-.input-submit:not(:disabled):active {
-  transform: scale(0.9);
-}
-
-.input-submit svg {
-  width: 18px;
-  height: 18px;
-  fill: white;
-}
+.input-submit:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.input-submit:not(:disabled):active { transform: scale(0.9); }
+.input-submit svg { width: 17px; height: 17px; fill: white; }
 
 /* ══════════════════════════════════════════════════════════
  * Loading & Animation
@@ -391,14 +370,8 @@ body {
 }
 
 @keyframes widget-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .widget-enter {
@@ -407,53 +380,25 @@ body {
 
 /* ── Empty state ── */
 .empty-state {
-  position: fixed;
-  inset: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  pointer-events: none;
 }
 
 .empty-icon { font-size: 48px; margin-bottom: 16px; }
-
 .empty-title {
   font-size: 24px;
   font-weight: 700;
-  color: rgba(0,0,0,0.50);
+  color: rgba(0,0,0,0.45);
   letter-spacing: -0.5px;
   margin-bottom: 6px;
 }
-
 .empty-subtitle {
   font-size: 16px;
-  color: rgba(0,0,0,0.25);
+  color: rgba(0,0,0,0.22);
   max-width: 280px;
   line-height: 1.4;
-}
-
-/* ── Scene separator ── */
-.scene-sep {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0 2px;
-}
-
-.scene-sep::before,
-.scene-sep::after {
-  content: '';
-  flex: 1;
-  height: 0.5px;
-  background: rgba(0,0,0,0.08);
-}
-
-.scene-sep-text {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(0,0,0,0.20);
-  white-space: nowrap;
 }
