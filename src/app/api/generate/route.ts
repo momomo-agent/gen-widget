@@ -43,6 +43,8 @@ const SYSTEM_PROMPT = [
   "6. 每组 5-6 个 widget，1-2 个用彩色底",
   "7. 用 emoji 做图标",
   "8. 禁止抽象/模糊内容（❌ '学习进度' ✓ '已背 150 词'）",
+  "9. w-value 内容控制在 5 字以内（如 18°、¥127、3.2km、85%），超长数字会溢出",
+  "10. 4x2 的 w-title 控制在 5 字以内，不要长标题",
 ].join("\n");
 
 export const maxDuration = 30;

@@ -61,7 +61,7 @@ body {
  * ══════════════════════════════════════════════════════════ */
 .widget {
   border-radius: var(--radius);
-  padding: 18px;
+  padding: 20px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -137,13 +137,16 @@ body {
 
 /* ⭐ 超大数字 — widget 的绝对视觉中心 */
 .w-value {
-  font-size: 56cqi;
+  font-size: 48cqi;
   font-weight: 100;
   color: var(--ios-label);
-  letter-spacing: -4px;
-  line-height: 0.8;
+  letter-spacing: -3px;
+  line-height: 0.85;
   white-space: nowrap;
   font-feature-settings: 'tnum' on;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* 单位 — 紧跟大数字, 小号, regular */
@@ -213,7 +216,7 @@ body {
 /* ══════════════════════════════════════════════════════════
  * Progress / Badge / List / Tag
  * ══════════════════════════════════════════════════════════ */
-.w-progress { height: 2.5px; background: var(--ios-fill); border-radius: 1.5px; margin-top: 6px; overflow: hidden; }
+.w-progress { height: 4px; background: var(--ios-fill); border-radius: 2px; margin-top: 6px; overflow: hidden; }
 .w-progress-fill { height: 100%; border-radius: 1.5px; background: var(--ios-blue); }
 .w-fill-green { background: var(--ios-green); }
 .w-fill-orange { background: var(--ios-orange); }
