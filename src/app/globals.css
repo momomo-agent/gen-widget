@@ -140,13 +140,31 @@ body {
   font-size: 42cqi;
   font-weight: 300;
   color: var(--ios-label);
-  letter-spacing: -2px;
-  line-height: 0.9;
+  letter-spacing: -1.5px;
+  line-height: 0.95;
   white-space: nowrap;
   font-feature-settings: 'tnum' on;
-  overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 100%;
+}
+
+/* 中号数字 — 5+ 字符内容用这个 */
+.w-value-md {
+  font-size: 28cqi;
+  font-weight: 400;
+  color: var(--ios-label);
+  letter-spacing: -1px;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: 'tnum' on;
+}
+
+/* 小号数字 — 长文本或时间用这个 */
+.w-value-sm {
+  font-size: 20cqi;
+  font-weight: 500;
+  color: var(--ios-label);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
 /* 单位 — 紧跟大数字, 小号, regular */
