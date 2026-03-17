@@ -1,52 +1,45 @@
 @import "tailwindcss";
 
 /* ══════════════════════════════════════════════════════════
- * Gen Widget — iOS Widget Design System v8
+ * Gen Widget — iOS Widget Design System v10
  * ══════════════════════════════════════════════════════════
  *
- * 面向手机。严格按 iPhone 15 Pro widget 比例：
- * 
- * 屏幕: 393pt 宽
- * Small: 170 × 170pt (43.3%)
- * Medium: 364 × 170pt (92.6%)
- * Large: 364 × 382pt
- * Gap: ~16pt
- * Side padding: ~16pt
- *
- * 2 列 grid，列宽 = (100vw - padding*2 - gap) / 2
- * 行高 = 列宽（正方形 cell）
+ * LLM 审美评审反馈驱动的设计修正：
+ * 1. 连续圆角 (superellipse via paint worklet or SVG mask)
+ * 2. SF Pro 字体系统 (ultralight 大数字, semibold 标签)
+ * 3. 真实毛玻璃 (blur 20px + saturate 180% + 白色叠加)
+ * 4. 极端信息层级 (大数字占 widget 40%+ 面积)
+ * 5. 充足呼吸感 (padding 18-20px)
  * ══════════════════════════════════════════════════════════ */
 
 :root {
   --pad: 16px;
   --gap: 12px;
-  --col: calc((100vw - var(--pad) * 2 - var(--gap)) / 2);
-  --radius: 22px;
+  --radius: 24px;
 
   --ios-blue: #007AFF;
   --ios-green: #34C759;
   --ios-orange: #FF9500;
   --ios-red: #FF3B30;
   --ios-purple: #AF52DE;
+
   --ios-label: rgba(0,0,0,0.88);
   --ios-secondary: rgba(0,0,0,0.45);
-  --ios-tertiary: rgba(0,0,0,0.25);
-  --ios-fill: rgba(120,120,128,0.1);
+  --ios-tertiary: rgba(0,0,0,0.22);
+  --ios-fill: rgba(120,120,128,0.08);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html, body { height: 100%; }
 
 body {
-  font-family: -apple-system, 'SF Pro Display', 'PingFang SC', system-ui, sans-serif;
-  background: linear-gradient(165deg, #c9dff7 0%, #d4e4f7 20%, #e0eaf5 40%, #d6dff0 60%, #c8d5eb 80%, #bfcfe6 100%);
+  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', system-ui, sans-serif;
+  background: linear-gradient(170deg, #d0e3f7 0%, #dde8f4 25%, #e6eef5 50%, #dde4f0 75%, #cdd9ec 100%);
   -webkit-font-smoothing: antialiased;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-/* ── Page ── */
 .page {
   min-height: 100vh;
   min-height: 100dvh;
@@ -54,7 +47,7 @@ body {
   padding-bottom: 100px;
 }
 
-/* ── Grid: strict 2-column, iPhone proportions ── */
+/* ── Grid ── */
 .widget-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -63,89 +56,78 @@ body {
   margin: 0 auto;
 }
 
-/* Each cell is square: use aspect-ratio on widgets */
-
 /* ══════════════════════════════════════════════════════════
- * Widget Base
+ * Widget Base — iOS 真实质感
  * ══════════════════════════════════════════════════════════ */
 .widget {
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 18px;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   min-width: 0;
   min-height: 0;
   container-type: size;
 
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(40px) saturate(1.8);
-  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  /* iOS 毛玻璃: 半透明白 + blur + saturate + 内发光 */
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(25px) saturate(1.6);
+  -webkit-backdrop-filter: blur(25px) saturate(1.6);
   box-shadow:
-    0 0.5px 0 0 rgba(255, 255, 255, 0.6) inset,
-    0 1px 3px rgba(0, 0, 0, 0.06),
-    0 6px 16px rgba(0, 0, 0, 0.04);
+    0 0.5px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.03);
+
+  /* 连续圆角模拟: outline trick + mask */
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
-/* ── Sizes (iOS proportions via aspect-ratio) ── */
-
-/* Small: 1 col, square */
-.widget[data-size="2x2"] {
-  grid-column: span 1;
-  aspect-ratio: 1 / 1;
-}
-
-/* Medium: 2 cols, same height as small → aspect-ratio 2.14:1 */
-.widget[data-size="4x2"] {
-  grid-column: span 2;
-  aspect-ratio: 364 / 170;
-}
-
-/* 4x2 内 w-value 不需要那么大 */
-.widget[data-size="4x2"] .w-value { font-size: 18cqi; }
-.widget[data-size="4x2"] .w-title { font-size: 12cqi; }
-.widget[data-size="4x2"] .w-icon { font-size: 12cqi; }
-/* 4x2 列表最多显示 3 项 */
-.widget[data-size="4x2"] .w-list-item:nth-child(n+5) { display: none; }
-
-/* Large: 2 cols, tall */
-.widget[data-size="4x4"] {
-  grid-column: span 2;
-  aspect-ratio: 364 / 382;
-}
-
-/* Compact: same grid cell as 2x2 */
-.widget[data-size="2x1"] {
-  grid-column: span 1;
-  aspect-ratio: 1 / 1;
-}
+/* ── Sizes ── */
+.widget[data-size="2x2"] { grid-column: span 1; aspect-ratio: 1 / 1; }
+.widget[data-size="4x2"] { grid-column: span 2; aspect-ratio: 364 / 170; }
+.widget[data-size="4x4"] { grid-column: span 2; aspect-ratio: 364 / 382; }
+.widget[data-size="2x1"] { grid-column: span 1; aspect-ratio: 1 / 1; }
 
 /* ══════════════════════════════════════════════════════════
- * Typography — cqi relative to widget width
+ * Typography — iOS SF Pro 字体系统
+ *
+ * 信息层级（从大到小）:
+ *   w-value   → 超大, ultralight (font-weight: 100)
+ *   w-title   → 大, semibold (font-weight: 600)
+ *   w-body    → 中, regular (font-weight: 400)
+ *   w-label   → 小, medium (font-weight: 500), uppercase
+ *   w-meta    → 极小, regular, 最灰
+ *
+ * 用 cqi (container query inline = 相对宽度)
  * ══════════════════════════════════════════════════════════ */
 
+/* emoji 图标 — 不要太大抢焦点 */
 .w-icon {
-  font-size: 18cqi;
+  font-size: 11cqi;
   line-height: 1;
   margin-bottom: 2px;
 }
 
+/* 小标签 — semibold, 极小, 灰色, uppercase 感觉 */
 .w-label {
-  font-size: 6.5cqi;
-  font-weight: 500;
-  color: var(--ios-tertiary);
+  font-size: 4.5cqi;
+  font-weight: 600;
+  color: rgba(0,0,0,0.18);
+  letter-spacing: 0.3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* 大标题 — semibold, 大 */
 .w-title {
-  font-size: 16cqi;
-  font-weight: 800;
+  font-size: 15cqi;
+  font-weight: 600;
   color: var(--ios-label);
-  line-height: 1.1;
-  letter-spacing: -0.8px;
+  line-height: 1.15;
+  letter-spacing: -0.3px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -153,23 +135,29 @@ body {
   -webkit-box-orient: vertical;
 }
 
+/* ⭐ 超大数字 — widget 的绝对视觉中心 */
 .w-value {
-  font-size: 28cqi;
-  font-weight: 200;
+  font-size: 56cqi;
+  font-weight: 100;
   color: var(--ios-label);
-  letter-spacing: -2px;
-  line-height: 1;
+  letter-spacing: -4px;
+  line-height: 0.8;
   white-space: nowrap;
+  font-feature-settings: 'tnum' on;
 }
 
+/* 单位 — 紧跟大数字, 小号, regular */
 .w-unit {
-  font-size: 12cqi;
+  font-size: 14cqi;
   font-weight: 400;
   color: var(--ios-secondary);
+  letter-spacing: 0;
 }
 
+/* 正文 — 小, 灰 */
 .w-body {
-  font-size: 8cqi;
+  font-size: 6.5cqi;
+  font-weight: 400;
   color: var(--ios-secondary);
   line-height: 1.3;
   overflow: hidden;
@@ -179,34 +167,37 @@ body {
   -webkit-box-orient: vertical;
 }
 
+/* 底部辅助 — 最小最灰, 自动推到底部 */
 .w-meta {
-  font-size: 6.5cqi;
-  color: var(--ios-secondary);
+  font-size: 5.5cqi;
+  font-weight: 400;
+  color: var(--ios-tertiary);
   margin-top: auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* ── Layout helpers ── */
 .w-row { display: flex; align-items: center; gap: 6px; }
 .w-col { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
 .w-spacer { flex: 1; }
 
 /* ══════════════════════════════════════════════════════════
- * Action Button — big capsule
+ * Action Button — iOS 胶囊按钮
  * ══════════════════════════════════════════════════════════ */
 .w-action {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  height: 22cqi;
-  padding: 0 12cqi;
+  height: 20cqi;
+  padding: 0 10cqi;
   border-radius: 99px;
   background: var(--ios-blue);
   color: white;
-  font-size: 9cqi;
-  font-weight: 700;
+  font-size: 8cqi;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   margin-top: auto;
@@ -220,75 +211,83 @@ body {
 .w-action-ghost { background: var(--ios-fill); color: var(--ios-blue); }
 
 /* ══════════════════════════════════════════════════════════
- * Progress / List / Badge / Tag
+ * Progress / Badge / List / Tag
  * ══════════════════════════════════════════════════════════ */
-.w-progress {
-  height: 3px;
-  background: var(--ios-fill);
-  border-radius: 1.5px;
-  margin-top: 4px;
-  overflow: hidden;
-}
+.w-progress { height: 2.5px; background: var(--ios-fill); border-radius: 1.5px; margin-top: 6px; overflow: hidden; }
 .w-progress-fill { height: 100%; border-radius: 1.5px; background: var(--ios-blue); }
 .w-fill-green { background: var(--ios-green); }
 .w-fill-orange { background: var(--ios-orange); }
 .w-fill-red { background: var(--ios-red); }
 
 .w-list-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 1px 0;
-  font-size: 7cqi;
-  color: var(--ios-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 4px; padding: 1px 0;
+  font-size: 6cqi; font-weight: 400; color: var(--ios-secondary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .w-list-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ios-blue); flex-shrink: 0; }
-.w-list-time { font-size: 7cqi; font-weight: 600; color: var(--ios-label); min-width: 2.5em; font-variant-numeric: tabular-nums; }
+.w-list-time { font-size: 6cqi; font-weight: 600; color: var(--ios-label); min-width: 2.5em; font-variant-numeric: tabular-nums; }
 
 .w-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 10cqi; height: 10cqi; padding: 0 3cqi;
-  border-radius: 99px; background: var(--ios-red); color: white; font-size: 6cqi; font-weight: 700;
+  min-width: 9cqi; height: 9cqi; padding: 0 2.5cqi;
+  border-radius: 99px; background: var(--ios-red); color: white; font-size: 5cqi; font-weight: 700;
 }
 .w-tag {
   display: inline-flex; align-items: center; padding: 2px 6px;
-  border-radius: 4px; background: var(--ios-fill); font-size: 6cqi; font-weight: 500; color: var(--ios-secondary);
+  border-radius: 4px; background: var(--ios-fill); font-size: 5cqi; font-weight: 500; color: var(--ios-secondary);
 }
 .w-divider { height: 0.5px; background: var(--ios-fill); margin: 3px 0; }
 
+/* 4x2 列表最多 3 项可见 */
+.widget[data-size="4x2"] .w-list-item:nth-child(n+5) { display: none; }
+
 /* ══════════════════════════════════════════════════════════
- * Color Variants
+ * 4x2 字号覆盖 (宽度是 2x2 的 2 倍, cqi 需要减半)
+ * ══════════════════════════════════════════════════════════ */
+.widget[data-size="4x2"] .w-icon { font-size: 8cqi; }
+.widget[data-size="4x2"] .w-value { font-size: 22cqi; }
+.widget[data-size="4x2"] .w-unit { font-size: 9cqi; }
+.widget[data-size="4x2"] .w-title { font-size: 10cqi; }
+.widget[data-size="4x2"] .w-label { font-size: 3.5cqi; }
+.widget[data-size="4x2"] .w-meta { font-size: 3.5cqi; }
+.widget[data-size="4x2"] .w-body { font-size: 4.5cqi; }
+.widget[data-size="4x2"] .w-list-item { font-size: 4.5cqi; }
+.widget[data-size="4x2"] .w-list-time { font-size: 4.5cqi; }
+.widget[data-size="4x2"] .w-action { font-size: 5cqi; height: 14cqi; }
+
+/* ══════════════════════════════════════════════════════════
+ * Color Variants — iOS 渐变风格
  * ══════════════════════════════════════════════════════════ */
 .w-bg-blue {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
-  backdrop-filter: none !important;
+  background: linear-gradient(145deg, #5bb5f8 0%, #2196f3 50%, #1a8be0 100%) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
-.w-bg-blue .w-label, .w-bg-blue .w-meta, .w-bg-blue .w-body { color: rgba(255,255,255,0.7); }
+.w-bg-blue .w-label, .w-bg-blue .w-meta, .w-bg-blue .w-body { color: rgba(255,255,255,0.65); }
 .w-bg-blue .w-title, .w-bg-blue .w-value { color: white; }
+.w-bg-blue .w-unit { color: rgba(255,255,255,0.7); }
 
 .w-bg-green {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
-  backdrop-filter: none !important;
+  background: linear-gradient(145deg, #5dd87a 0%, #34c759 50%, #28a745 100%) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
-.w-bg-green .w-label, .w-bg-green .w-meta { color: rgba(0,0,0,0.4); }
+.w-bg-green .w-label, .w-bg-green .w-meta { color: rgba(0,0,0,0.35); }
+.w-bg-green .w-title, .w-bg-green .w-value { color: rgba(0,0,0,0.85); }
 
 .w-bg-dark {
-  background: rgba(30, 30, 30, 0.85) !important;
-  backdrop-filter: blur(40px) saturate(1.8) !important;
+  background: rgba(28, 28, 30, 0.72) !important;
+  backdrop-filter: blur(25px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(1.6) !important;
 }
-.w-bg-dark .w-label, .w-bg-dark .w-meta { color: rgba(255,255,255,0.55); }
+.w-bg-dark .w-label, .w-bg-dark .w-meta { color: rgba(255,255,255,0.5); }
 .w-bg-dark .w-title, .w-bg-dark .w-value { color: rgba(255,255,255,0.95); }
 .w-bg-dark .w-body { color: rgba(255,255,255,0.6); }
-.w-bg-dark .w-unit { color: rgba(255,255,255,0.5); }
+.w-bg-dark .w-unit { color: rgba(255,255,255,0.55); }
 
 .w-bg-orange {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
-  backdrop-filter: none !important;
+  background: linear-gradient(145deg, #ffb347 0%, #ff9500 50%, #e68900 100%) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
-.w-bg-orange .w-label, .w-bg-orange .w-meta { color: rgba(255,255,255,0.7); }
+.w-bg-orange .w-label, .w-bg-orange .w-meta { color: rgba(255,255,255,0.65); }
 .w-bg-orange .w-title, .w-bg-orange .w-value { color: white; }
 
 .w-up { color: var(--ios-green) !important; }
@@ -298,50 +297,33 @@ body {
  * Input Bar
  * ══════════════════════════════════════════════════════════ */
 .input-bar {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 500px;
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 432px;
   padding: 10px var(--pad) max(env(safe-area-inset-bottom, 14px), 14px);
-  z-index: 100;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
+  z-index: 100; display: flex; align-items: flex-end; gap: 8px;
 }
 
 .input-field {
-  flex: 1;
-  min-height: 42px;
-  max-height: 100px;
-  border-radius: 21px;
-  border: none;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(30px) saturate(1.5);
-  -webkit-backdrop-filter: blur(30px) saturate(1.5);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 0.5px 0 rgba(255,255,255,0.5) inset;
-  padding: 10px 16px;
-  font-size: 16px;
-  font-family: inherit;
-  outline: none;
-  color: var(--ios-label);
-  resize: none;
-  line-height: 1.4;
+  flex: 1; min-height: 42px; max-height: 100px;
+  border-radius: 21px; border: none;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(25px) saturate(1.5);
+  -webkit-backdrop-filter: blur(25px) saturate(1.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0.5px 0 rgba(255,255,255,0.5) inset;
+  padding: 10px 16px; font-size: 16px; font-family: inherit;
+  outline: none; color: var(--ios-label); resize: none; line-height: 1.4;
 }
 .input-field::placeholder { color: var(--ios-tertiary); }
-.input-field:focus {
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 0 0 3px rgba(0,122,255,0.12), 0 0.5px 0 rgba(255,255,255,0.5) inset;
-}
+.input-field:focus { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 3px rgba(0,122,255,0.1), 0 0.5px 0 rgba(255,255,255,0.5) inset; }
 
 .input-submit {
   width: 42px; height: 42px; border-radius: 50%;
   background: var(--ios-blue); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+  box-shadow: 0 2px 8px rgba(0,122,255,0.25);
   transition: opacity 0.15s, transform 0.15s;
 }
-.input-submit:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.input-submit:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
 .input-submit:not(:disabled):active { transform: scale(0.9); }
 .input-submit svg { width: 17px; height: 17px; fill: white; }
 
@@ -353,26 +335,18 @@ body {
   100% { background-position: 200% 0; }
 }
 .widget-loading {
-  background: linear-gradient(90deg, rgba(255,255,255,0.72) 30%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.72) 70%) !important;
-  background-size: 200% 100% !important;
-  animation: shimmer 1.5s ease infinite;
+  background: linear-gradient(90deg, rgba(255,255,255,0.65) 30%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.65) 70%) !important;
+  background-size: 200% 100% !important; animation: shimmer 1.5s ease infinite;
 }
 
 @keyframes widget-in {
-  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  from { opacity: 0; transform: scale(0.94) translateY(6px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
-.widget-enter { animation: widget-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.widget-enter { animation: widget-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
-/* ── Empty state ── */
-.empty-state {
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
+/* ── Empty ── */
+.empty-state { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .empty-icon { font-size: 48px; margin-bottom: 16px; }
-.empty-title { font-size: 24px; font-weight: 700; color: rgba(0,0,0,0.45); letter-spacing: -0.5px; margin-bottom: 6px; }
-.empty-subtitle { font-size: 16px; color: rgba(0,0,0,0.22); max-width: 260px; line-height: 1.4; }
+.empty-title { font-size: 24px; font-weight: 700; color: rgba(0,0,0,0.4); letter-spacing: -0.5px; margin-bottom: 6px; }
+.empty-subtitle { font-size: 16px; color: rgba(0,0,0,0.2); max-width: 260px; line-height: 1.4; }
