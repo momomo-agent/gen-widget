@@ -66,7 +66,6 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-width: 0;
   min-height: 0;
   container-type: size;
@@ -387,6 +386,10 @@ body {
   padding: 3px 0;
   font-size: 6cqi;
   color: var(--ios-label);
+}
+/* 2x2 里最多显示 3 个 checkbox */
+.widget[data-size="2x2"] .w-check:nth-child(n+5) {
+  display: none;
 }
 .w-checkbox {
   width: 18px; height: 18px;
