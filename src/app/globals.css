@@ -112,19 +112,19 @@ body {
 
 /* 小标签 — semibold, 极小, 灰色, uppercase 感觉 */
 .w-label {
-  font-size: 4.5cqi;
-  font-weight: 600;
-  color: rgba(0,0,0,0.18);
-  letter-spacing: 0.3px;
+  font-size: 5.5cqi;
+  font-weight: 500;
+  color: var(--ios-secondary);
+  letter-spacing: 0.2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* 大标题 — semibold, 大 */
+/* 大标题 — bold, 大 */
 .w-title {
-  font-size: 15cqi;
-  font-weight: 600;
+  font-size: 16cqi;
+  font-weight: 700;
   color: var(--ios-label);
   line-height: 1.15;
   letter-spacing: -0.3px;
@@ -137,11 +137,11 @@ body {
 
 /* ⭐ 超大数字 — widget 的绝对视觉中心 */
 .w-value {
-  font-size: 48cqi;
-  font-weight: 100;
+  font-size: 42cqi;
+  font-weight: 300;
   color: var(--ios-label);
-  letter-spacing: -3px;
-  line-height: 0.85;
+  letter-spacing: -2px;
+  line-height: 0.9;
   white-space: nowrap;
   font-feature-settings: 'tnum' on;
   overflow: hidden;
@@ -152,14 +152,14 @@ body {
 /* 单位 — 紧跟大数字, 小号, regular */
 .w-unit {
   font-size: 14cqi;
-  font-weight: 400;
+  font-weight: 300;
   color: var(--ios-secondary);
   letter-spacing: 0;
 }
 
 /* 正文 — 小, 灰 */
 .w-body {
-  font-size: 6.5cqi;
+  font-size: 7.5cqi;
   font-weight: 400;
   color: var(--ios-secondary);
   line-height: 1.3;
@@ -172,7 +172,7 @@ body {
 
 /* 底部辅助 — 最小最灰, 自动推到底部 */
 .w-meta {
-  font-size: 5.5cqi;
+  font-size: 6cqi;
   font-weight: 400;
   color: var(--ios-tertiary);
   margin-top: auto;
