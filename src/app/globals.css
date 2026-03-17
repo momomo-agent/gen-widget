@@ -81,10 +81,10 @@ body {
 }
 
 /* Sizes */
-.widget[data-size="2x2"] { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
-.widget[data-size="4x2"] { grid-column: span 2; grid-row: span 1; }
+.widget[data-size="2x2"] { grid-column: span 1; grid-row: span 1; min-height: 140px; }
+.widget[data-size="4x2"] { grid-column: span 2; grid-row: span 1; min-height: 100px; }
 .widget[data-size="4x4"] { grid-column: span 2; grid-row: span 2; }
-.widget[data-size="2x1"] { grid-column: span 1; grid-row: span 1; aspect-ratio: 2/1; }
+.widget[data-size="2x1"] { grid-column: span 1; grid-row: span 1; }
 
 /* ── Background variants — 柔和渐变，不要太艳 ── */
 .w-bg-blue {
@@ -233,11 +233,11 @@ body {
 .w-action-green,
 .w-action-orange,
 .w-action-red {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5cqi 8cqi;
-  border-radius: 12px;
+  padding: 6cqi 8cqi;
+  border-radius: 10px;
   background: rgba(0,122,255,0.12);
   color: var(--ios-blue);
   font-size: 5.5cqi;
@@ -264,11 +264,11 @@ body {
 }
 
 .w-action-secondary {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5cqi 8cqi;
-  border-radius: 12px;
+  padding: 6cqi 8cqi;
+  border-radius: 10px;
   background: rgba(0,0,0,0.05);
   color: var(--ios-blue);
   font-size: 5.5cqi;
