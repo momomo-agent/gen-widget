@@ -45,6 +45,9 @@ const SYSTEM_PROMPT = [
   "8. 禁止抽象/模糊内容（❌ '学习进度' ✓ '已背 150 词'）",
   "9. w-value 内容控制在 5 字以内（如 18°、¥127、3.2km、85%），超长数字会溢出",
   "10. 4x2 的 w-title 控制在 5 字以内，不要长标题",
+  "11. 2x2 widget 结构固定为: icon → value(大数字) → meta(底部小字)，最多 3 层",
+  "12. 有按钮(w-action)的 widget 不要再放 w-meta，防止挤底",
+  "13. 4x2 列表型 widget 结构: icon+title 一行 → 最多 2 条 list-item → meta",
 ].join("\n");
 
 export const maxDuration = 30;
