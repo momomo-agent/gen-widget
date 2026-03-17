@@ -60,6 +60,8 @@ const SYSTEM_PROMPT = [
   "12. ⚠️ 禁止使用 style 属性！只用预定义的 CSS 类",
   "13. w-tag 只放 2-3 字短标签（如'P0'、'进行中'），不要放长句",
   "14. w-stats 只用在 4x2 里，2x2 空间不够",
+  "15. 所有按钮/动作必须用 w-action/w-action-green/w-action-orange 类，不要写纯文字链接",
+  "16. w-check 在 2x2 里最多 3 个，4x2 最多 4 个",
 ].join("\n");
 
 export const maxDuration = 30;

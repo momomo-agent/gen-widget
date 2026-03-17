@@ -206,31 +206,49 @@ body {
 /* ══════════════════════════════════════════════════════════
  * Action Button — iOS 胶囊按钮
  * ══════════════════════════════════════════════════════════ */
-.w-action {
-  display: flex;
+.w-action,
+.w-action-green,
+.w-action-orange,
+.w-action-red {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  height: 20cqi;
-  padding: 0 10cqi;
+  padding: 6cqi 10cqi;
   border-radius: 99px;
   background: rgba(0, 122, 255, 0.12);
   color: var(--ios-blue);
-  font-size: 8cqi;
+  font-size: 6.5cqi;
   font-weight: 600;
   border: none;
   cursor: pointer;
   margin-top: auto;
-  margin-bottom: 2px;
-  width: calc(100% - 4px);
-  margin-inline: 2px;
   white-space: nowrap;
+  align-self: stretch;
+  text-align: center;
 }
 
 .w-action-green { background: rgba(52, 199, 89, 0.12); color: var(--ios-green); }
 .w-action-orange { background: rgba(255, 149, 0, 0.12); color: var(--ios-orange); }
 .w-action-red { background: rgba(255, 59, 48, 0.12); color: var(--ios-red); }
 .w-action-ghost { background: var(--ios-fill); color: var(--ios-blue); }
+
+/* Secondary action — 更低调 */
+.w-action-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6cqi 10cqi;
+  border-radius: 99px;
+  background: rgba(0,0,0,0.04);
+  color: var(--ios-blue);
+  font-size: 6.5cqi;
+  font-weight: 600;
+  margin-top: auto;
+  white-space: nowrap;
+  align-self: stretch;
+  text-align: center;
+}
 
 /* ══════════════════════════════════════════════════════════
  * Progress / Badge / List / Tag
