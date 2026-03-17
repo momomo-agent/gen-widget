@@ -352,6 +352,88 @@ body {
 .input-submit svg { width: 17px; height: 17px; fill: white; }
 
 /* ══════════════════════════════════════════════════════════
+ * Extended Components (v1)
+ * ══════════════════════════════════════════════════════════ */
+
+/* Color tags */
+.w-tag-blue { background: rgba(0,122,255,0.12); color: #007AFF; }
+.w-tag-green { background: rgba(52,199,89,0.12); color: #34C759; }
+.w-tag-orange { background: rgba(255,149,0,0.12); color: #FF9500; }
+.w-tag-red { background: rgba(255,59,48,0.12); color: #FF3B30; }
+
+/* Accent text colors */
+.w-accent-blue { color: #007AFF; }
+.w-accent-green { color: #34C759; }
+.w-accent-orange { color: #FF9500; }
+.w-accent-red { color: #FF3B30; }
+.w-accent-purple { color: #AF52DE; }
+.w-accent-teal { color: #5AC8FA; }
+
+/* Checkbox items */
+.w-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 6cqi;
+  color: var(--ios-label);
+}
+.w-checkbox {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  border: 2px solid rgba(0,0,0,0.15);
+  flex-shrink: 0;
+}
+.w-checkbox-done {
+  background: #34C759;
+  border-color: #34C759;
+}
+
+/* Secondary action button */
+.w-action-secondary {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.04);
+  color: var(--ios-blue);
+  text-align: center;
+  font-size: 6cqi;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+/* Horizontal stat row */
+.w-stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+.w-stat { flex: 1; }
+.w-stat-label {
+  font-size: 4.5cqi;
+  color: var(--ios-tertiary);
+  margin-bottom: 2px;
+}
+.w-stat-value {
+  font-size: 10cqi;
+  font-weight: 300;
+  color: var(--ios-label);
+  letter-spacing: -0.5px;
+}
+
+/* Colored list dots */
+.w-list-dot-green { background: #34C759 !important; }
+.w-list-dot-orange { background: #FF9500 !important; }
+.w-list-dot-red { background: #FF3B30 !important; }
+.w-list-dot-purple { background: #AF52DE !important; }
+
+/* Colored progress fill variants */
+.w-progress-fill-green { background: #34C759 !important; }
+.w-progress-fill-orange { background: #FF9500 !important; }
+.w-progress-fill-red { background: #FF3B30 !important; }
+
+/* ══════════════════════════════════════════════════════════
  * Animation
  * ══════════════════════════════════════════════════════════ */
 @keyframes shimmer {
