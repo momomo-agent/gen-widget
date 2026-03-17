@@ -214,7 +214,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 6cqi 10cqi;
+  padding: 5cqi 10cqi;
+  min-height: 16cqi;
   border-radius: 99px;
   background: rgba(0, 122, 255, 0.12);
   color: var(--ios-blue);
@@ -226,6 +227,7 @@ body {
   white-space: nowrap;
   align-self: stretch;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .w-action-green { background: rgba(52, 199, 89, 0.12); color: var(--ios-green); }
@@ -401,11 +403,12 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 3px 0;
-  font-size: 6cqi;
+  padding: 2px 0;
+  font-size: 5.5cqi;
   color: var(--ios-label);
+  line-height: 1.3;
 }
-/* 2x2 里最多显示 3 个 checkbox */
+/* 2x2 里最多显示 3 个 checkbox（有 action 时只显示 2 个） */
 .widget[data-size="2x2"] .w-check:nth-child(n+5) {
   display: none;
 }
