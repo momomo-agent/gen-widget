@@ -57,6 +57,9 @@ const SYSTEM_PROMPT = [
   "9. 用 emoji 做图标",
   "10. 生成 5-7 个 widget，2x2 和 4x2 为主力尺寸",
   "11. 善用 w-check/w-tag/w-stats/w-progress 等丰富组件，不要总是 icon+value+meta",
+  "12. ⚠️ 禁止使用 style 属性！只用预定义的 CSS 类",
+  "13. w-tag 只放 2-3 字短标签（如'P0'、'进行中'），不要放长句",
+  "14. w-stats 只用在 4x2 里，2x2 空间不够",
 ].join("\n");
 
 export const maxDuration = 30;
@@ -97,7 +100,15 @@ export async function POST(req: NextRequest) {
 
     const validSizes = new Set(["2x1", "2x2", "4x2", "4x4"]);
     if (data.widgets) {
-      data.widgets = data.widgets.filter((w: any) => validSizes.has(w.size));
+      data.widgets = data.widgets
+        .filter((w: any) => validSizes.has(w.size))
+        .map((w: any) => ({
+          ...w,
+          // Strip inline styles except width (for progress bars)
+          html: w.html
+            .replace(/\s*style="(?!width:)[^"]*"/g, '')
+            .replace(/\s*style='(?!width:)[^']*'/g, ''),
+        }));
     }
 
     return NextResponse.json(data);

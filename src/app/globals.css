@@ -356,6 +356,16 @@ body {
  * ══════════════════════════════════════════════════════════ */
 
 /* Color tags */
+.w-tag, .w-tag-blue, .w-tag-green, .w-tag-orange, .w-tag-red {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 5cqi;
+  font-weight: 500;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+.w-tag { background: rgba(0,0,0,0.05); color: var(--ios-secondary); }
 .w-tag-blue { background: rgba(0,122,255,0.12); color: #007AFF; }
 .w-tag-green { background: rgba(52,199,89,0.12); color: #34C759; }
 .w-tag-orange { background: rgba(255,149,0,0.12); color: #FF9500; }
