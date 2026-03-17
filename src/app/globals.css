@@ -80,6 +80,56 @@ body {
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
+/* 4x2/4x4 字号覆盖 — 防止 cqi 翻倍 */
+.widget[data-size="4x2"] .w-icon,
+.widget[data-size="4x4"] .w-icon { font-size: 18px; }
+.widget[data-size="4x2"] .w-label,
+.widget[data-size="4x4"] .w-label { font-size: 11px; }
+.widget[data-size="4x2"] .w-title,
+.widget[data-size="4x4"] .w-title { font-size: 22px; }
+.widget[data-size="4x2"] .w-value,
+.widget[data-size="4x4"] .w-value { font-size: 38px; }
+.widget[data-size="4x2"] .w-value-md,
+.widget[data-size="4x4"] .w-value-md { font-size: 26px; }
+.widget[data-size="4x2"] .w-value-sm,
+.widget[data-size="4x4"] .w-value-sm { font-size: 18px; }
+.widget[data-size="4x2"] .w-unit,
+.widget[data-size="4x4"] .w-unit { font-size: 14px; }
+.widget[data-size="4x2"] .w-body,
+.widget[data-size="4x4"] .w-body { font-size: 13px; }
+.widget[data-size="4x2"] .w-meta,
+.widget[data-size="4x4"] .w-meta { font-size: 11px; }
+.widget[data-size="4x2"] .w-action,
+.widget[data-size="4x2"] .w-action-green,
+.widget[data-size="4x2"] .w-action-orange,
+.widget[data-size="4x2"] .w-action-red,
+.widget[data-size="4x2"] .w-action-secondary,
+.widget[data-size="4x4"] .w-action,
+.widget[data-size="4x4"] .w-action-green,
+.widget[data-size="4x4"] .w-action-orange,
+.widget[data-size="4x4"] .w-action-red,
+.widget[data-size="4x4"] .w-action-secondary { font-size: 13px; padding: 8px 14px; }
+.widget[data-size="4x2"] .w-list-item,
+.widget[data-size="4x4"] .w-list-item { font-size: 13px; }
+.widget[data-size="4x2"] .w-list-time,
+.widget[data-size="4x4"] .w-list-time { font-size: 11px; }
+.widget[data-size="4x2"] .w-check,
+.widget[data-size="4x4"] .w-check { font-size: 13px; }
+.widget[data-size="4x2"] .w-tag,
+.widget[data-size="4x2"] .w-tag-blue,
+.widget[data-size="4x2"] .w-tag-green,
+.widget[data-size="4x2"] .w-tag-orange,
+.widget[data-size="4x2"] .w-tag-red,
+.widget[data-size="4x4"] .w-tag,
+.widget[data-size="4x4"] .w-tag-blue,
+.widget[data-size="4x4"] .w-tag-green,
+.widget[data-size="4x4"] .w-tag-orange,
+.widget[data-size="4x4"] .w-tag-red { font-size: 11px; }
+.widget[data-size="4x2"] .w-stat-label,
+.widget[data-size="4x4"] .w-stat-label { font-size: 10px; }
+.widget[data-size="4x2"] .w-stat-value,
+.widget[data-size="4x4"] .w-stat-value { font-size: 16px; }
+
 /* Sizes */
 .widget[data-size="2x2"] { grid-column: span 1; grid-row: span 1; min-height: 140px; }
 .widget[data-size="4x2"] { grid-column: span 2; grid-row: span 1; min-height: 100px; }
